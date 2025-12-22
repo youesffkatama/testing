@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bible.AI - الكتاب المقدس التفاعلي</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="rtl">
+
+  <!-- Splash Screen -->
+  <div id="splashScreen" class="splash-screen">
+    <div class="splash-content">
+      <div class="splash-icon"><i class="fas fa-book-bible"></i></div>
+      <h1 class="splash-title">Bible.AI</h1>
+      <p class="splash-subtitle" data-i18n="app-subtitle">الكتاب المقدس التفاعلي</p>
+      <div class="splash-loader"><div class="loader-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- Login Container -->
+  <div id="loginContainer" class="auth-container" style="display:none;">
+    <div class="auth-background">
+      <div class="floating-shape shape-1"></div>
+      <div class="floating-shape shape-2"></div>
+      <div class="floating-shape shape-3"></div>
+    </div>
+    <div class="auth-box">
+      <div class="auth-logo"><i class="fas fa-book-bible"></i></div>
+      <h2 data-i18n="login-title">تسجيل الدخول</h2>
+      <p class="auth-subtitle" data-i18n="login-subtitle">مرحباً بعودتك إلى Bible.AI</p>
+      <div class="input-group">
+        <label data-i18n="email">البريد الإلكتروني</label>
+        <div class="input-field">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="email" data-i18n-placeholder="email-placeholder" placeholder="your@email.com">
+        </div>
+      </div>
+      <div class="input-group">
+        <label data-i18n="password-placeholder">كلمة المرور</label>
+        <div class="input-field">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="pass" data-i18n-placeholder="password-placeholder" placeholder="••••••••">
+        </div>
+      </div>
+      <button class="btn-primary" id="loginBtn">
+        <i class="fas fa-sign-in-alt"></i>
+        <span data-i18n="login-btn">تسجيل الدخول</span>
+      </button>
+      <div class="auth-divider"><span data-i18n="or">أو</span></div>
+      <p class="auth-link">
+        <span data-i18n="no-account">ليس لديك حساب؟</span>
+        <a id="goSignup" data-i18n="create-account">إنشاء حساب جديد</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Signup Container -->
+  <div id="signupContainer" class="auth-container" style="display:none;">
+    <div class="auth-background">
+      <div class="floating-shape shape-1"></div>
+      <div class="floating-shape shape-2"></div>
+      <div class="floating-shape shape-3"></div>
+    </div>
+    <div class="auth-box">
+      <div class="auth-logo"><i class="fas fa-user-plus"></i></div>
+      <h2 data-i18n="signup-title">إنشاء حساب</h2>
+      <p class="auth-subtitle" data-i18n="signup-subtitle">انضم إلى مجتمع Bible.AI</p>
+      <div class="input-group">
+        <label data-i18n="full-name">الاسم الكامل</label>
+        <div class="input-field">
+          <i class="fas fa-user"></i>
+          <input type="text" id="signupName" data-i18n-placeholder="name-placeholder" placeholder="John Doe">
+        </div>
+      </div>
+      <div class="input-group">
+        <label data-i18n="email">البريد الإلكتروني</label>
+        <div class="input-field">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="signupEmail" data-i18n-placeholder="email-placeholder" placeholder="your@email.com">
+        </div>
+      </div>
+      <div class="input-group">
+        <label data-i18n="password-placeholder">كلمة المرور</label>
+        <div class="input-field">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="signupPass" data-i18n-placeholder="password-placeholder" placeholder="••••••••">
+        </div>
+      </div>
+      <button class="btn-primary" id="signupBtn">
+        <i class="fas fa-user-plus"></i>
+        <span data-i18n="signup-btn">إنشاء حساب</span>
+      </button>
+      <div class="auth-divider"><span data-i18n="or">أو</span></div>
+      <p class="auth-link">
+        <span data-i18n="has-account">لديك حساب؟</span>
+        <a id="goLogin" data-i18n="login-link">تسجيل الدخول</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Main Header -->
+  <header id="mainHeader" class="main-header" style="display:none;">
+    <div class="header-container">
+      <div class="logo">
+        <i class="fas fa-book-bible"></i>
+        <span data-i18n="app-name">Bible.AI</span>
+      </div>
+      <nav class="main-nav">
+        <a class="nav-item active" data-page="home" onclick="showPage('home')">
+          <i class="fas fa-home"></i>
+          <span data-i18n="nav-home">الرئيسية</span>
+        </a>
+        <a class="nav-item" data-page="search" onclick="showPage('search')">
+          <i class="fas fa-search"></i>
+          <span data-i18n="nav-search">البحث</span>
+        </a>
+        <a class="nav-item" data-page="journal" onclick="showPage('journal')">
+          <i class="fas fa-book"></i>
+          <span data-i18n="nav-journal">يومياتي</span>
+        </a>
+        <a class="nav-item" data-page="profile" onclick="showPage('profile')">
+          <i class="fas fa-user"></i>
+          <span data-i18n="nav-profile">الملف الشخصي</span>
+        </a>
+      </nav>
+      <div class="header-right">
+        <button class="theme-toggle" onclick="toggleDarkMode()">
+          <i class="fas fa-moon"></i>
+        </button>
+        <!-- Notification Bell -->
+        <div class="notification-bell" onclick="toggleNotificationCenter()">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge" id="notificationBadge" style="display:none;">0</span>
+        </div>
+        <div class="user-menu" onclick="showPage('profile')">
+          <img id="headerAvatar" src="" alt="User">
+          <span id="headerUsername">User</span>
+        </div>
+                <!-- Add this after the notification-bell div in header-right -->
+        <div class="note-circle" onclick="toggleNotePanel()" title="Quick Notes">
+          <i class="fas fa-sticky-note"></i>
+        </div>
+
+        <!-- Note Panel - Add before closing </body> tag -->
+        </div>
+    </div>
+  </header>
+
+  <!-- Notification Center Panel -->
+  <div id="notificationCenter" class="notification-center" style="display:none;">
+    <div class="notification-header">
+      <h3 data-i18n="notifications">الإشعارات</h3>
+      <button onclick="markAllNotificationsRead()" data-i18n="mark-all-read">تحديد الكل كمقروء</button>
+    </div>
+    <div id="notificationList" class="notification-list">
+      <!-- Notifications will be loaded here -->
+    </div>
+  </div>
+
+  <!-- HOME PAGE -->
+  <section id="homePage" class="page-section">
+    <div class="hero-section">
+      <div>
+        <div class="hero-badge">
+          <i class="fas fa-star"></i>
+          <span data-i18n="hero-badge">اكتشف الكتاب المقدس بطريقة جديدة</span>
+        </div>
+        <h1 class="hero-title">
+          <span data-i18n="hero-welcome">مرحباً بك في</span>
+          <span class="gradient-text">Bible.AI</span>
+        </h1>
+        <p class="hero-description" data-i18n="hero-description">
+          استكشف أسفار الكتاب المقدس مع مساعد ذكاء اصطناعي متقدم يساعدك على فهم النصوص المقدسة بعمق
+        </p>
+        <div class="hero-buttons">
+          <button class="btn-hero-primary" onclick="showPage('search')">
+            <i class="fas fa-search"></i>
+            <span data-i18n="start-exploring">ابدأ الاستكشاف</span>
+          </button>
+          <button class="btn-hero-secondary" onclick="showPage('profile')">
+            <i class="fas fa-cog"></i>
+            <span data-i18n="settings">الإعدادات</span>
+          </button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="floating-card card-1">
+          <i class="fas fa-book-open"></i>
+          <p data-i18n="books-count">73 سفر</p>
+        </div>
+        <div class="floating-card card-2">
+          <i class="fas fa-robot"></i>
+          <p data-i18n="ai-powered">AI متخصص</p>
+        </div>
+        <div class="floating-card card-3">
+          <i class="fas fa-language"></i>
+          <p data-i18n="multilang">3 لغات</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="features-section">
+      <h2 class="section-title" data-i18n="why-bible-ai">لماذا Bible.AI؟</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-robot"></i></div>
+          <h3 data-i18n="feature-ai-title">ذكاء اصطناعي متخصص</h3>
+          <p data-i18n="feature-ai-desc">احصل على إجابات دقيقة من شخصيات الكتاب المقدس نفسها</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-book"></i></div>
+          <h3 data-i18n="nav-journal">يوميات روحية</h3>
+          <p data-i18n="feature-journal-desc">دوّن تأملاتك وأفكارك الروحية اليومية</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEARCH PAGE -->
+  <section id="searchPage" class="page-section">
+    <div class="search-hero">
+      <h1 data-i18n="explore-books">استكشف أسفار الكتاب المقدس</h1>
+      <p data-i18n="explore-subtitle">اختر سفراً لتبدأ رحلتك الروحية</p>
+      <div class="search-bar-container">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" data-i18n-placeholder="search-books" placeholder="ابحث عن سفر..." oninput="filterBooks()">
+        <button class="search-btn" data-i18n="search">بحث</button>
+      </div>
+    </div>
+
+    <div class="books-section">
+      <div class="books-filter">
+        <button class="filter-btn active" data-category="all" data-i18n="filter-all" onclick="filterByCategory('all', this)">الكل</button>
+        <button class="filter-btn" data-category="old" data-i18n="filter-old" onclick="filterByCategory('old', this)">العهد القديم</button>
+        <button class="filter-btn" data-category="new" data-i18n="filter-new" onclick="filterByCategory('new', this)">العهد الجديد</button>
+      </div>
+      <div id="booksGrid" class="books-grid">
+        <!-- Books loaded by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- JOURNAL PAGE (NEW) -->
+  <section id="journalPage" class="page-section">
+    <div class="journal-container">
+      <div class="journal-header">
+        <h1><i class="fas fa-book"></i> <span data-i18n="journal-title">يومياتي الروحية</span></h1>
+        <button class="btn-primary" onclick="openJournalEditor()">
+          <i class="fas fa-plus"></i>
+          <span data-i18n="journal-new">تدوينة جديدة</span>
+        </button>
+      </div>
+      
+      <div class="journal-filters">
+        <input type="text" id="journalSearch" placeholder="البحث في اليوميات..." oninput="filterJournalEntries()">
+        <select id="journalSort" onchange="loadJournalEntries()">
+          <option value="newest" data-i18n="sort-newest">الأحدث أولاً</option>
+          <option value="oldest" data-i18n="sort-oldest">الأقدم أولاً</option>
+        </select>
+      </div>
+
+      <div id="journalEntries" class="journal-entries">
+        <!-- Journal entries loaded by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Journal Editor Modal -->
+  <!-- Journal Editor Modal (replaced by Google-Keep style note panel further below) -->
+  <!-- BOOK DETAIL PAGE -->
+  <section id="bookDetailPage" class="page-section">
+    <div class="book-detail-container">
+      <button class="back-button" onclick="showPage('search')">
+        <i class="fas fa-arrow-right"></i>
+        <span data-i18n="back">العودة</span>
+      </button>
+
+      <div class="book-detail-header">
+        <div>
+          <div class="book-badge" id="bookBadge">العهد القديم</div>
+          <h1 class="book-detail-title" id="bookTitle">سفر التكوين</h1>
+          <p class="book-detail-subtitle" id="bookSubtitle">بداية الخليقة</p>
+          <div class="book-author-info">
+            <img id="bookAuthorImage" class="author-image" src="" alt="Author">
+            <div>
+              <div class="author-name" id="bookAuthor">موسى النبي</div>
+            </div>
+          </div>
+        </div>
+        <div class="book-detail-icon">
+          <i class="fas fa-book-open"></i>
+        </div>
+      </div>
+
+      <div class="book-content-layout">
+        <div class="book-info">
+          <div class="info-card">
+            <h3><i class="fas fa-info-circle"></i> <span data-i18n="about-book">نبذة عن السفر</span></h3>
+            <p id="bookSummary"></p>
+          </div>
+          <div class="info-card">
+            <h3><i class="fas fa-list-check"></i> <span data-i18n="key-points">نقاط رئيسية</span></h3>
+            <ul class="key-points" id="keyPoints"></ul>
+          </div>
+        </div>
+
+        <div class="chat-container-modern">
+          <div class="chat-header">
+            <div class="chat-avatar" id="chatAvatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div>
+              <h3 id="aiTitle">المساعد الذكي</h3>
+              <p class="chat-status">
+                <span class="status-dot"></span>
+                <span data-i18n="online">متصل</span>
+              </p>
+            </div>
+            <div style="margin-inline-start: auto; display: flex; gap: 0.5rem;">
+              <button class="clear-btn" onclick="clearChat()" title="مسح المحادثة">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="chat-messages" id="chatLog"></div>
+          <form class="chat-input-form" id="chatForm" onsubmit="sendMessage(event)">
+            <input type="text" id="userInput" data-i18n-placeholder="ask-question" placeholder="اكتب سؤالك هنا...">
+            <button type="button" class="deep-search-btn" id="deepSearchBtn" onclick="toggleDeepSearch()" title="Deep Search Mode">
+              <i class="fas fa-brain"></i>
+            </button>
+            <button type="submit" class="send-btn">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROFILE PAGE -->
+  <section id="profilePage" class="page-section">
+    <div class="profile-layout">
+      <div class="profile-sidebar">
+        <div class="profile-card">
+          <div class="profile-avatar-container">
+            <img id="profilePic" class="profile-avatar" src="" alt="Profile">
+            <label for="profilePicInput" class="avatar-edit-btn">
+              <i class="fas fa-camera"></i>
+            </label>
+            <input type="file" id="profilePicInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
+          </div>
+          <h2 class="profile-name" id="profileName">User</h2>
+          <p class="profile-email" id="profileEmail">user@example.com</p>
+          <div class="profile-stats">
+            <div class="stat">
+              <i class="fas fa-book-open"></i>
+              <div>
+                <strong id="booksReadStat">12</strong>
+                <span data-i18n="books-read">أسفار مقروءة</span>
+              </div>
+            </div>
+            <div class="stat">
+              <i class="fas fa-calendar-days"></i>
+              <div>
+                <strong id="daysActiveStat">45</strong>
+                <span data-i18n="days-active">يوم نشط</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-menu">
+          <a class="profile-menu-item active" data-section="settings" onclick="showProfileSection('settings')">
+            <i class="fas fa-user-cog"></i>
+            <span data-i18n="account-settings">إعدادات الحساب</span>
+          </a>
+          <a class="profile-menu-item" data-section="security" onclick="showProfileSection('security')">
+            <i class="fas fa-lock"></i>
+            <span data-i18n="security-password">الأمان وكلمة المرور</span>
+          </a>
+          <a class="profile-menu-item" data-section="preferences" onclick="showProfileSection('preferences')">
+            <i class="fas fa-sliders"></i>
+            <span data-i18n="preferences">التفضيلات</span>
+          </a>
+          <a class="profile-menu-item danger" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span data-i18n="logout">تسجيل الخروج</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="profile-content">
+        <div id="settingsSection" class="profile-section">
+          <h2 data-i18n="account-settings">إعدادات الحساب</h2>
+          <div class="settings-group">
+            <label data-i18n="full-name">الاسم الكامل</label>
+            <div class="input-field">
+              <i class="fas fa-user"></i>
+              <input type="text" id="userName" data-i18n-placeholder="enter-name" placeholder="أدخل اسمك الكامل">
+            </div>
+          </div>
+          <div class="settings-group">
+            <label data-i18n="email">البريد الإلكتروني</label>
+            <div class="input-field">
+              <i class="fas fa-envelope"></i>
+              <input type="email" id="userEmail" readonly style="background: var(--off-white); cursor: not-allowed;">
+            </div>
+          </div>
+          <div class="settings-group">
+            <label data-i18n="phone">رقم الهاتف</label>
+            <div class="input-field">
+              <i class="fas fa-phone"></i>
+              <input type="tel" id="userPhone">
+            </div>
+          </div>
+          <button class="btn-save" onclick="saveSettings()">
+            <i class="fas fa-save"></i>
+            <span data-i18n="save-changes">حفظ التغييرات</span>
+          </button>
+        </div>
+
+        <div id="securitySection" class="profile-section" style="display:none;">
+          <h2 data-i18n="security-password">الأمان وكلمة المرور</h2>
+          <div class="settings-group">
+            <label data-i18n="current-password">كلمة المرور الحالية</label>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="currentPassword">
+            </div>
+          </div>
+          <div class="settings-group">
+            <label data-i18n="new-password">كلمة المرور الجديدة</label>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="newPassword">
+            </div>
+          </div>
+          <div class="settings-group">
+            <label data-i18n="confirm-password">تأكيد كلمة المرور</label>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="confirmPassword">
+            </div>
+          </div>
+          <button class="btn-save" onclick="changePassword()">
+            <i class="fas fa-key"></i>
+            <span data-i18n="update-password">تحديث كلمة المرور</span>
+          </button>
+        </div>
+
+        <div id="preferencesSection" class="profile-section" style="display:none;">
+          <h2 data-i18n="preferences">التفضيلات</h2>
+          <div class="settings-group">
+            <label>اللغة / Language</label>
+            <div class="language-settings">
+              <div class="lang-option active" id="lang-ar" onclick="changeLang('ar')">
+                <span class="flag">🇪🇬</span>
+                <p>العربية</p>
+              </div>
+              <div class="lang-option" id="lang-en" onclick="changeLang('en')">
+                <span class="flag">🇬🇧</span>
+                <p>English</p>
+              </div>
+              <div class="lang-option" id="lang-ru" onclick="changeLang('ru')">
+                <span class="flag">🇷🇺</span>
+                <p>Русский</p>
+              </div>
+            </div>
+          </div>
+          <div class="preference-item">
+            <div>
+              <h3 data-i18n="pref-dark-mode">الوضع الليلي</h3>
+              <p>Dark mode for comfortable reading</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="darkModeTogglePref" onchange="toggleDarkMode()">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADMIN PANEL (Existing) -->
+  <div id="adminPanel" class="admin-panel" style="display:none;">
+    <!-- Admin sidebar and content (unchanged from original) -->
+    <div class="admin-sidebar">
+      <div class="admin-logo">
+        <i class="fas fa-shield-halved"></i>
+        <h2 data-i18n="admin-panel">لوحة الإدارة</h2>
+      </div>
+      <nav class="admin-nav">
+        <a class="active" data-section="users" onclick="showAdminSection('users')">
+          <i class="fas fa-users"></i>
+          <span data-i18n="admin-users">المستخدمين</span>
+        </a>
+        <a data-section="analytics" onclick="showAdminSection('analytics')">
+          <i class="fas fa-chart-line"></i>
+          <span data-i18n="admin-analytics">الإحصائيات</span>
+        </a>
+        <a data-section="logs" onclick="showAdminSection('logs')">
+          <i class="fas fa-list"></i>
+          <span data-i18n="admin-logs">السجلات</span>
+        </a>
+        <a data-section="email" onclick="showAdminSection('email')">
+          <i class="fas fa-envelope"></i>
+          <span data-i18n="admin-email">إرسال رسائل</span>
+        </a>
+        <a class="logout" onclick="logoutAdmin()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span data-i18n="logout">تسجيل الخروج</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="admin-content">
+      <div class="admin-header">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p class="admin-time" id="adminTime"></p>
+        </div>
+      </div>
+
+      <div id="usersSection" class="admin-section">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <i class="fas fa-users"></i>
+            <div>
+              <h3 id="totalUsers">0</h3>
+              <p>Total Users</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-user-check"></i>
+            <div>
+              <h3 id="activeUsers">0</h3>
+              <p>Active Users</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-calendar-day"></i>
+            <div>
+              <h3 id="todayLogins">0</h3>
+              <p>Today's Logins</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="users-table-container">
+          <div class="table-header">
+            <h2>Users Management</h2>
+            <div class="search-box-admin">
+              <i class="fas fa-search"></i>
+              <input type="text" id="adminSearch" placeholder="Search users..." oninput="filterAdminUsers()">
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="users-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Created</th>
+                  <th>Last Login</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="analyticsSection" class="admin-section" style="display:none;">
+        <h2>Analytics</h2>
+        <div class="analytics-grid">
+          <div class="analytics-card">
+            <h3>User Growth</h3>
+            <div class="chart-placeholder">
+              <i class="fas fa-chart-line"></i>
+              <p>Chart will be displayed here</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="logsSection" class="admin-section" style="display:none;">
+        <h2>Activity Logs</h2>
+        <div class="logs-container" id="logsContainer"></div>
+      </div>
+
+      <div id="emailSection" class="admin-section" style="display:none;">
+        <div class="email-form-container">
+          <h2>Send Email to Users</h2>
+          <form class="email-form" onsubmit="handleEmailForm(event)">
+            <div class="settings-group">
+              <label>Recipient</label>
+              <select id="emailRecipient" class="email-select">
+                <option value="all">All Users</option>
+              </select>
+            </div>
+            <div class="settings-group">
+              <label>Subject</label>
+              <div class="input-field">
+                <input type="text" id="emailSubject" placeholder="Email subject">
+              </div>
+            </div>
+            <div class="settings-group">
+              <label>Message</label>
+              <textarea id="emailMessage" rows="8" placeholder="Email message..."></textarea>
+            </div>
+            <button type="submit" class="btn-save">
+              <i class="fas fa-paper-plane"></i>
+              Send Email
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verse of the Day Modal -->
+  <div id="verseOfDayModal" class="modal verse-modal" style="display:none;">
+    <div class="modal-content verse-content">
+      <button class="modal-close" onclick="closeVerseOfDay()">&times;</button>
+      <div class="verse-header">
+        <i class="fas fa-book-bible"></i>
+        <h2 data-i18n="verse-of-day">آية اليوم</h2>
+      </div>
+      <div class="verse-body">
+        <p class="verse-text" id="verseText"></p>
+        <p class="verse-reference" id="verseReference"></p>
+        <div class="verse-reflection">
+          <h3><i class="fas fa-lightbulb"></i> <span data-i18n="ai-reflection">تأمل من الذكاء الاصطناعي</span></h3>
+          <p id="verseReflection"></p>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="closeVerseOfDay()" data-i18n="close">إغلاق</button>
+    </div>
+  </div>
+  <div id="journalEditorModal" class="modal" style="display:none;">
+    <div class="modal-content journal-modal-refined">
+      <div class="modal-header">
+        <h2>تدوينة جديدة</h2>
+        <button class="modal-close" onclick="closeJournalEditor()">&times;</button>
+      </div>
+      
+      <div class="journal-meta">
+        <div class="mood-picker">
+          <label>شعوري اليوم:</label>
+          <div class="moods">
+            <span onclick="setMood('joy')" title="فرح">😊</span>
+            <span onclick="setMood('peace')" title="سلام">🕊️</span>
+            <span onclick="setMood('sad')" title="حزن">😔</span>
+            <span onclick="setMood('hope')" title="رجاء">🙏</span>
+          </div>
+        </div>
+        <div class="date-display" id="journalDateDisplay"></div>
+      </div>
+  
+      <div class="modal-body">
+        <input type="text" id="journalTitle" class="clean-input title-input" placeholder="عنوان التدوينة">
+        
+        <div class="verse-link-box">
+          <i class="fas fa-link"></i>
+          <input type="text" id="journalVerse" class="clean-input" placeholder="آية مرجعية (مثال: مزمور 23: 1)">
+        </div>
+  
+        <div class="editor-area">
+          <textarea id="journalContent" placeholder="سجل تأملاتك الروحية هنا... كيف عمل الله في حياتك اليوم؟"></textarea>
+        </div>
+  
+        <div class="tags-section">
+          <div id="journalTagList" class="tags-container"></div>
+          <div class="tag-input-wrapper">
+            <i class="fas fa-tag"></i>
+            <input type="text" id="journalTagInput" placeholder="إضافة وسم (اضغط Enter)">
+            <button class="add-tag-btn" onclick="addJournalTag()"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+  
+      <div class="modal-footer">
+        <button class="btn-text" onclick="closeJournalEditor()">إلغاء</button>
+        <button class="btn-primary" onclick="saveJournalEntry()">
+          <i class="fas fa-save"></i> حفظ التدوينة
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Note Panel - Google Keep Style (SINGLE INSTANCE) -->
+  <div id="notePanel" class="note-panel-keep" style="display:none;">
+    <div class="note-panel-overlay" onclick="toggleNotePanel()"></div>
+    
+    <div class="note-panael-content">
+      <div class="note-panel-header">
+        <h3><i class="fas fa-sticky-note"></i> <span data-i18n="quick-notes">ملاحظات سريعة</span></h3>
+        <button class="close-btn" onclick="toggleNotePanel()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="note-panel-body">
+        <!-- New Note Input -->
+        <div class="note-create-box">
+          <div class="note-create-collapsed" id="noteCollapsed" onclick="expandNoteBox()">
+            <i class="fas fa-plus-circle"></i>
+            <span data-i18n="note-create-placeholder">اضغط هنا عشان تكتب ملاحظاتك</span>
+          </div>
+          
+          <div class="note-create-expanded" id="noteExpanded" style="display:none;">
+            <input type="text" id="noteTitle" placeholder="العنوان" data-i18n-placeholder="note-title">
+            <textarea id="quickNoteInput" placeholder="اكتب ملاحظتك..." rows="4" data-i18n-placeholder="note-content"></textarea>
+            
+            <div class="note-create-footer">
+              <div class="color-options">
+                <button class="color-btn active" data-color="white" onclick="setNoteColor('white')" style="background: #fff; border: 1px solid #e0e0e0;"></button>
+                <button class="color-btn" data-color="yellow" onclick="setNoteColor('yellow')" style="background: #fff475;"></button>
+                <button class="color-btn" data-color="green" onclick="setNoteColor('green')" style="background: #ccff90;"></button>
+                <button class="color-btn" data-color="blue" onclick="setNoteColor('blue')" style="background: #a7ffeb;"></button>
+                <button class="color-btn" data-color="pink" onclick="setNoteColor('pink')" style="background: #f8bbd0;"></button>
+                <button class="color-btn" data-color="purple" onclick="setNoteColor('purple')" style="background: #d7aefb;"></button>
+              </div>
+              <div class="note-actions">
+                <button class="btn-text" onclick="collapseNoteBox()" data-i18n="close">إغلاق</button>
+                <button class="btn-save-note" onclick="saveQuickNote()">
+                  <i class="fas fa-check"></i> <span data-i18n="save">حفظ</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes Grid -->
+        <div class="notes-section">
+          <div class="notes-header">
+            <h4 data-i18n="my-notes">ملاحظاتي</h4>
+            <div class="notes-view-toggle">
+              <button class="view-btn active" onclick="setNotesView('grid', this)" title="Grid View">
+                <i class="fas fa-th"></i>
+              </button>
+              <button class="view-btn" onclick="setNotesView('list', this)" title="List View">
+                <i class="fas fa-list"></i>
+              </button>
+            </div>
+          </div>
+
+          <div id="noteHistoryList" class="notes-grid">
+            <!-- Notes will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="db.js"></script>
+</body>
+</html>

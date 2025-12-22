@@ -1,0 +1,19 @@
+{
+  "youesffstg@gmail.com": {
+    "books": [
+      "ruth",
+      "deuteronomy"
+    ],
+    "totalViews": 2,
+    "lastViewed": {
+      "ruth": {
+        "name": "سفر راعوث",
+        "timestamp": "2025-11-28T18:14:00.569Z"
+      },
+      "deuteronomy": {
+        "name": "سفر التثنية",
+        "timestamp": "2025-11-28T18:14:34.678Z"
+      }
+    }
+  }
+}
