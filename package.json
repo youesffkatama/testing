@@ -1,0 +1,27 @@
+{
+  "name": "bible-ai",
+  "version": "2.0.0",
+  "description": "Bible AI Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "check": "node --check server.js",
+    "ci": "npm run check"
+  },
+  "engines": {
+    "node": ">=14.x"
+  },
+  "dependencies": {
+    "@aws-crypto/sha256-js": "^3.0.0",
+    "@aws-sdk/client-s3": "^3.940.0",
+    "@aws-sdk/credential-providers": "^3.940.0",
+    "bson": "^4.7.2",
+    "dotenv": "^16.3.1",
+    "mongodb": "^4.17.2",
+    "mongoose": "^6.13.8",
+    "mquery": "^4.0.3",
+    "tr46": "^2.1.0",
+    "whatwg-url": "^8.7.0"
+  }
+}
