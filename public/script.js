@@ -2948,6 +2948,7 @@ if (!document.getElementById('notification-styles')) {
 let currentNoteColor = 'white';
 let currentNotesView = 'grid';
 let editingNoteId = null;
+let notesCache = []; // in-memory cache of loaded notes (from server or localStorage)
 
 function expandNoteBox() {
   document.getElementById('noteCollapsed').style.display = 'none';
@@ -3063,13 +3064,15 @@ async function loadQuickNotes() {
     
     if (res.ok) {
       const data = await res.json();
-      displayNotes(data.notes || []);
+      notesCache = data.notes || [];
+      displayNotes(notesCache);
     } else {
       throw new Error('Failed to load');
     }
   } catch (err) {
-    const notes = JSON.parse(localStorage.getItem('quickNotes-' + currentUser.email) || '[]');
-    displayNotes(notes);
+    const local = JSON.parse(localStorage.getItem('quickNotes-' + currentUser.email) || '[]');
+    notesCache = local;
+    displayNotes(notesCache);
   }
 }
 
@@ -3087,8 +3090,10 @@ function displayNotes(notes) {
     return;
   }
   
-  list.innerHTML = notes.map(note => `
-    <div class="note-card" data-color="${note.color || 'white'}" onclick="editNote('${note.id}')">
+  list.innerHTML = notes.map(note => {
+    const nid = note._id || note.id;
+    return `
+    <div class="note-card" data-color="${note.color || 'white'}" onclick="editNote('${nid}')">
       ${note.title ? `<div class="note-card-title">${note.title}</div>` : ''}
       <div class="note-card-content">${note.text}</div>
       <div class="note-card-footer">
@@ -3096,21 +3101,38 @@ function displayNotes(notes) {
         ${note.bookName ? `<span><i class="fas fa-book"></i> ${note.bookName}</span>` : ''}
       </div>
       <div class="note-card-actions">
-        <button class="note-action-btn delete" onclick="onDeleteNoteClick(event, '${note.id}')">
+        <button class="note-action-btn delete" onclick="onDeleteNoteClick(event, '${nid}')">
           <i class="fas fa-trash"></i>
         </button>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 function editNote(noteId) {
-  // Get note from storage
-  const notes = JSON.parse(localStorage.getItem('quickNotes-' + currentUser.email) || '[]');
-  const note = notes.find(n => n.id === noteId);
-  
+  // Find note in cache (server or local)
+  const note = notesCache.find(n => (n._id && n._id === noteId) || (n.id && n.id === noteId));
+  // If not in cache, also try localStorage fallback
+  if (!note) {
+    const local = JSON.parse(localStorage.getItem('quickNotes-' + currentUser.email) || '[]');
+    const noteLocal = local.find(n => n.id === noteId);
+    if (noteLocal) {
+      editingNoteId = noteLocal.id;
+      document.getElementById('noteTitle').value = noteLocal.title || '';
+      document.getElementById('quickNoteInput').value = noteLocal.text;
+      currentNoteColor = noteLocal.color || 'white';
+      document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.color === currentNoteColor) btn.classList.add('active');
+      });
+      expandNoteBox();
+      return;
+    }
+    return;
+  }
+
   if (note) {
-    editingNoteId = noteId;
+    editingNoteId = note._id || note.id || noteId;
     document.getElementById('noteTitle').value = note.title || '';
     document.getElementById('quickNoteInput').value = note.text;
     currentNoteColor = note.color || 'white';
